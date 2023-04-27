@@ -110,3 +110,35 @@ QAGS_CNNDM:
 
 ## Predicted Scores
 [unieval_predict](./unieval_predict) folder contains the evaluation scores of UniEval on all meta-evaluation benchmarks.
+
+---
+
+## Adaption for TS
+
+As an initial inspection, we score the summarization model's predictions against Human Ratings from ASSET.
+```
+# prepare ASSET data for scoring (may need to change hardcoded path to ASSET dir)
+python get_annotated_asset_data.py
+# compute correlation statistics
+./eval_simplification.sh
+```
+Results of summarization eval model on simplification
+```
+********** Sample Level Correlations *********
++-------------+----------+----------+----------+
+|  Dimensions | Pearson  | Spearman | Kendall  |
++-------------+----------+----------+----------+
+|  coherence  | 0.417719 | 0.523525 | 0.364111 |
+| consistency | 0.383966 | 0.474313 | 0.330855 |
+|   fluency   | 0.511344 | 0.537332 | 0.387069 |
++-------------+----------+----------+----------+
+
+ ********* Summary Level Correlations *********
++-------------+-----------+-----------+-----------+
+|  Dimensions |  Pearson  |  Spearman |  Kendall  |
++-------------+-----------+-----------+-----------+
+|  coherence  | -0.024328 |  -0.02419 | -0.019136 |
+| consistency | -0.011192 |   -0.013  | -0.014113 |
+|   fluency   |  -0.02327 | -0.015393 | -0.013951 |
++-------------+-----------+-----------+-----------+
+```
