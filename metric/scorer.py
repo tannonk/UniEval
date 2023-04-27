@@ -58,12 +58,9 @@ class UniEvaluator:
                     src_mask = encoded_src['attention_mask'].to(self.device)
 
                     tgt_tokens = encoded_tgt['input_ids'].to(self.device)[:, 0].unsqueeze(-1)
-
-                    output = self.model(
-                        input_ids=src_tokens,
-                        attention_mask=src_mask,
-                        labels = tgt_tokens
-                    )
+                    # breakpoint()
+                    output = self.model(input_ids=src_tokens, attention_mask=src_mask, labels=tgt_tokens)
+                    # breakpoint()
                     logits = output.logits.view(-1, self.model.config.vocab_size)
             
                     pos_score = self.softmax(logits)[:, self.pos_id] # Yes

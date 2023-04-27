@@ -30,6 +30,64 @@ def get_unique_value(data, key):
             value.add(data[i][key])
     return list(value)
 
+def correlation_for_simp(data, overall=True):
+    """
+        Adapted from correlation_for_summ.
+        Only difference is that we don't have 'fluency' dimension since this is not considered in the meta-evaluation benchmark.
+    """
+    dimensions = ['coherence', 'consistency', 'fluency']
+    if overall == True:
+        dimensions.append('overall')
+    # sample level correlation
+    print('\n ********** Sample Level Correlations *********')
+    result = {}
+    for dim in dimensions:
+        pred_score, human_score = [], []
+        for i in range(len(data)):
+            pred_score.append(data[i]['predict_scores'][dim])
+            human_score.append(data[i]['scores'][dim])
+        result = calculate_correlation(pred_score, human_score, dim, result)
+    print_correlations(result)
+    
+    # summary level correlation
+    print('\n ********* Summary Level Correlations *********')
+    result = {}
+    docs = get_unique_value(data, 'doc_id')
+    for dim in dimensions:
+        valid_cnt = 0
+        for doc_idx in docs:
+            pred_score, human_score = [], []
+            for i in range(len(data)):
+                if data[i]['doc_id'] == doc_idx:
+                    pred_score.append(data[i]['predict_scores'][dim])
+                    human_score.append(data[i]['scores'][dim])
+            if len(set(pred_score)) == 1 or len(set(human_score)) == 1:
+                continue
+            result = calculate_correlation(pred_score, human_score, dim, result)
+            valid_cnt += 1
+        for j in range(3):
+            result[dim][j] /= valid_cnt
+    print_correlations(result)
+                
+    # # system level correlations
+    # print('\n ********** System Level Correlations *********')
+    # result = {}
+    # systems = get_unique_value(data, 'system_id')
+    # for dim in dimensions:
+    #     pred_score, human_score = [], []
+    #     for system_idx in systems:
+    #         doc_cnt = 0
+    #         cur_pred, cur_human = 0, 0
+    #         for i in range(len(data)):
+    #             if data[i]['system_id'] == system_idx:
+    #                 cur_pred += data[i]['predict_scores'][dim]
+    #                 cur_human += data[i]['scores'][dim]
+    #                 doc_cnt += 1
+    #         pred_score.append(cur_pred / doc_cnt)
+    #         human_score.append(cur_human / doc_cnt)
+    #     result = calculate_correlation(pred_score, human_score, dim, result)
+    # print_correlations(result)
+
 def correlation_for_summ(data, overall=True):
     """
         Provides calculation results of correlation at sample level, summary level and system level.
@@ -38,7 +96,6 @@ def correlation_for_summ(data, overall=True):
     dimensions = ['coherence', 'consistency', 'fluency', 'relevance']
     if overall == True:
         dimensions.append('overall')
-
     # sample level correlation
     print('\n ********** Sample Level Correlations *********')
     result = {}
@@ -149,7 +206,9 @@ def main(args):
     data_path = join(join('predict', args.task), '{}_result.json'.format(args.dataset))
     print('\nCorrelations for \'{}\' are shown below:'.format(data_path))
     data = load_json(data_path)
-    if args.task == 'summarization':
+    if args.task == 'simplification':
+        correlation_for_simp(data, overall=False) # overall is not available for simplification
+    elif args.task == 'summarization':
         correlation_for_summ(data)
     elif args.task == 'dialogue':
         correlation_for_dialog(data)
@@ -169,6 +228,6 @@ if __name__ == "__main__":
         help='The name of the meta-evaluation benchmark', type=str)
 
     args = parser.parse_args()
-    assert args.task in ['summarization', 'dialogue', 'data2text', 'fact']
+    assert args.task in ['simplification', 'summarization', 'dialogue', 'data2text', 'fact']
 
     main(args)
