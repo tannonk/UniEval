@@ -8,3 +8,12 @@ python predict_score.py \
 python correlation.py \
     --task simplification \
     --dataset asset \
+
+python predict_score.py \
+    --task fact \
+    --data_path ${DATA_DIR} \
+    --max_source_length 1024 \
+
+python correlation.py \
+    --task fact \
+    --dataset asset \

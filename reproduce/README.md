@@ -122,7 +122,7 @@ python get_annotated_asset_data.py
 # compute correlation statistics
 ./eval_simplification.sh
 ```
-Results of summarization eval model on simplification
+Results of summarization eval model on simplification:
 ```
 ********** Sample Level Correlations *********
 +-------------+----------+----------+----------+
@@ -141,4 +141,13 @@ Results of summarization eval model on simplification
 | consistency | -0.011192 |   -0.013  | -0.014113 |
 |   fluency   |  -0.02327 | -0.015393 | -0.013951 |
 +-------------+-----------+-----------+-----------+
+```
+Single-dimensional UinEval for consistency (QAGS) has lower correlation than the multi-dimensional model:
+```
+ ********** Sample Level Correlations *********
++-------------+----------+----------+----------+
+|  Dimensions | Pearson  | Spearman | Kendall  |
++-------------+----------+----------+----------+
+| consistency | 0.308545 | 0.400624 | 0.282446 |
++-------------+----------+----------+----------+
 ```
