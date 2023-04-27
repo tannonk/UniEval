@@ -7,4 +7,4 @@ python predict_score.py \
 
 python correlation.py \
     --task simplification \
-    --dataset summeval \
+    --dataset asset \
