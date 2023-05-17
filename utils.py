@@ -97,6 +97,20 @@ def add_question(dimension, output, src=None, ref=None, context=None, task=None)
             else:
                 raise NotImplementedError('No other dimensions for the factual consistency detection task.')
         # For new customized tasks
+        # Simplification
+        elif task == 'simplification':
+            if dimension == 'fluency':
+                cur_input = 'question: Is this a fluent paragraph? </s> paragraph: ' + output[i]
+            elif dimension == 'coherence':
+                cur_input = 'question: Is this a coherent summary to the document? </s> summary: ' + output[i] + ' </s> document: ' + src[i]
+            elif dimension == 'consistency':
+                cur_input = 'question: Is this claim consistent with the document? </s> claim: ' + output[i] + ' </s> document: ' + src[i]
+            elif dimension == 'relevance':
+                cur_input = 'question: Is this summary relevant to the reference? </s> summary: ' + output[i] + ' </s> reference: ' + ref[i]
+            elif dimension == 'simplicity':
+                cur_input = 'question: Is this text easier to read and understand than the original? </s> text: ' + output[i] + ' </s> original: ' + src[i]
+            else:
+                raise NotImplementedError('The input format for this dimension is still undefined. Please customize it first.')                
         else:
             raise NotImplementedError('Other tasks are not implemented, please customize specific tasks here.')
         input_with_question.append(cur_input)

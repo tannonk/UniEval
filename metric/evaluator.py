@@ -94,13 +94,16 @@ class SumEvaluator:
 class SimpEvaluator:
     # same as SumEvaluator except we exclude the 'relevance' dimension, since it is not included in the meta-evaluation benchmark
     def __init__(self, max_length=1024, device='cuda:0', cache_dir=None):
-        """ Set up evaluator for text summarization """
-        self.scorer = UniEvaluator(model_name_or_path='MingZhong/unieval-sum', 
-                                   max_length=max_length, 
-                                   device=device, cache_dir=cache_dir)
-        self.task = 'summarization'
-        self.dimensions = ['coherence', 'consistency', 'fluency']
-    
+        """ Set up evaluator for text simplification """
+        self.scorer = UniEvaluator(
+            model_name_or_path='/home/user/kew/projects/llm_eval/UniEval/continual_simp_simplicity',
+            # model_name_or_path='MingZhong/unieval-sum', 
+            max_length=max_length, 
+            device=device, cache_dir=cache_dir
+            )
+        self.task = 'simplification'
+        self.dimensions = ['coherence', 'consistency', 'fluency', 'simplicity']
+
     def evaluate(self, data, dims=None, overall=True, print_result=False):
         """
             Get the scores of all the given dimensions
@@ -160,6 +163,15 @@ class SimpEvaluator:
                                           src=src_list, ref=ref_list, task=self.task)
                 score = self.scorer.score(input_list)
             
+            elif dim == 'simplicity':
+                src_list, output_list = [], []
+                for i in range(n_data):
+                    src_list.append(data[i]['source'])
+                    output_list.append(data[i]['system_output'])
+                input_list = add_question(dimension=dim, output=output_list,
+                                            src=src_list, task=self.task)
+                score = self.scorer.score(input_list)
+
             # Please customize other dimensions here for summarization
             else:
                 raise NotImplementedError('The input format for this dimension is still undefined. \

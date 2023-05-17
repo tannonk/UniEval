@@ -125,12 +125,12 @@ def run_evaluation(src_list: List[str], ref_list: List[str], output_list: List[s
                         src_list=src_list, ref_list=ref_list)
 
     # breakpoint()
+    # breakpoint()
     # Initialize evaluator for a specific task
     evaluator = get_evaluator(task)
 
     # Get multi-dimensional evaluation scores
     eval_scores = evaluator.evaluate(data, print_result=True)
-    breakpoint()
     return eval_scores
 
 if __name__ == '__main__':

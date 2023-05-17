@@ -35,7 +35,7 @@ def correlation_for_simp(data, overall=True):
         Adapted from correlation_for_summ.
         Only difference is that we don't have 'fluency' dimension since this is not considered in the meta-evaluation benchmark.
     """
-    dimensions = ['coherence', 'consistency', 'fluency']
+    dimensions = ['coherence', 'consistency', 'fluency', 'simplicity']
     if overall == True:
         dimensions.append('overall')
     # sample level correlation

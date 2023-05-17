@@ -66,6 +66,7 @@ for i, sdf in df.groupby(['worker_id', 'original_sentence_id']):
             "coherence": float(sdf[sdf.aspect == 'meaning']['rating'].item()),
             "consistency": float(sdf[sdf.aspect == 'meaning']['rating'].item()),
             "fluency": float(sdf[sdf.aspect == 'fluency']['rating'].item()),
+            "simplicity": float(sdf[sdf.aspect == 'simplicity']['rating'].item()),
             # "relevance": 0.0, # relevance asks "Is this summary relevant to the reference?", but human ratings do not consider references, therefore it's irrelevant here!
             # "overall": 0.0,
         }
